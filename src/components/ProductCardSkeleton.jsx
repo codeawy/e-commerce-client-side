@@ -1,4 +1,4 @@
-import { Box, Flex, Skeleton, SkeletonCircle, SkeletonText, useColorMode } from "@chakra-ui/react";
+import { Box, Skeleton, SkeletonText, useColorMode } from "@chakra-ui/react";
 
 const ProductSkeleton = () => {
   const { colorMode } = useColorMode();

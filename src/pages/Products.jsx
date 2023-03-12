@@ -4,7 +4,7 @@ import axios from "axios";
 import { useInfiniteQuery } from "react-query";
 import { AiOutlinePlus } from "react-icons/ai";
 import ProductSkeleton from "../components/ProductCardSkeleton";
-import { Button } from "@chakra-ui/react";
+import { Button, Progress } from "@chakra-ui/react";
 
 const ProductsPage = () => {
   const getProductList = async ({ pageParam = 1 }) => {
@@ -30,7 +30,7 @@ const ProductsPage = () => {
     }
   );
 
-  if (true)
+  if (isLoading)
     return (
       <Grid templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"} gap={6}>
         {Array.from({ length: 20 }, (_, idx) => (
@@ -41,6 +41,18 @@ const ProductsPage = () => {
 
   return (
     <>
+      {isFetching ? (
+        <Progress
+          size="xs"
+          isIndeterminate
+          colorScheme={"purple"}
+          position={"absolute"}
+          top={"0"}
+          left={"0"}
+          w={"full"}
+        />
+      ) : null}
+
       <Grid templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"} gap={6}>
         {data.pages.map(product =>
           product.data.map(product => <ProductCard key={product.id} {...product} />)
