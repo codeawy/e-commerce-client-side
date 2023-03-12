@@ -9,6 +9,7 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { onCloseCartDrawerAction, selectGlobal } from "../app/features/globalSlice";
@@ -18,6 +19,7 @@ import { clearCart, selectCart } from "../app/features/cartSlice";
 const CartDrawer = () => {
   const btnRef = useRef();
   const dispatch = useDispatch();
+  const { colorMode } = useColorMode();
   const { isOpenCartDrawer } = useSelector(selectGlobal);
   const { cartProducts } = useSelector(selectCart);
   const onClose = () => dispatch(onCloseCartDrawerAction());
@@ -25,7 +27,7 @@ const CartDrawer = () => {
   return (
     <Drawer isOpen={isOpenCartDrawer} placement="right" onClose={onClose} finalFocusRef={btnRef}>
       <DrawerOverlay />
-      <DrawerContent>
+      <DrawerContent bg={colorMode === "light" ? "white" : "#141214"}>
         <DrawerCloseButton />
         <DrawerHeader>Your Shopping Cart</DrawerHeader>
 

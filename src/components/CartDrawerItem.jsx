@@ -10,7 +10,7 @@ const CartDrawerItem = ({ id, attributes: { thumbnail, title, price }, quantity 
     <>
       <Flex alignItems={"center"} mb={3} py={2}>
         <Image
-          src={`${import.meta.env.VITE_SERVER_URL}${thumbnail.data.attributes.url}`}
+          src={thumbnail.data.attributes.url}
           alt={title}
           w={"80px"}
           h={"80px"}

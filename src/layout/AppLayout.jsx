@@ -6,7 +6,7 @@ const AppLayout = () => {
   return (
     <>
       <Navbar />
-      <Container maxW="7xl">
+      <Container maxW="7xl" mb={16}>
         <Outlet />
       </Container>
     </>

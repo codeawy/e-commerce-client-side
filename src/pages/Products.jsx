@@ -71,13 +71,15 @@ const ProductsPage = () => {
             rightIcon={<AiOutlinePlus />}
             variant="solid"
             onClick={fetchNextPage}
+            color="white"
             bg="#6b28ef"
             _hover={{
               bg: "#570af2",
               border: "transparent",
             }}
+            fontSize="md"
           >
-            Load More
+            LOAD MORE
           </Button>
         </Stack>
       ) : null}
