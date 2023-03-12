@@ -10,7 +10,12 @@ const ProductCard = ({ id, attributes }) => {
   const { colorMode } = useColorMode();
 
   return (
-    <Card border={"1px solid #2d3748"} bg={"none"} rounded={"lg"}>
+    <Card
+      border={colorMode === "light" ? "1px solid #ddd" : "1px solid #2d3748"}
+      bg={"none"}
+      rounded={"lg"}
+      boxShadow={"10px 10px 0px 0px rgba(245,245,245,1)"}
+    >
       <CardBody>
         <Image
           src={attributes?.thumbnail?.data?.attributes?.formats?.small?.url}
@@ -33,8 +38,8 @@ const ProductCard = ({ id, attributes }) => {
           <Button
             as={Link}
             to={`/products/${id}`}
-            bg={colorMode === "light" ? "#e6f3fd" : "#9f7aea"}
-            color={colorMode !== "light" ? "#e6f3fd" : "#9f7aea"}
+            bg={"#6b28ef"}
+            color={"#e6f3fd"}
             size={"xl"}
             variant="outline"
             border={"none"}
@@ -42,8 +47,7 @@ const ProductCard = ({ id, attributes }) => {
             overflow={"hidden"}
             w={"full"}
             _hover={{
-              bg: colorMode !== "light" ? "#e6f3fd" : "#9f7aea",
-              color: colorMode === "light" ? "white" : "#9f7aea",
+              bg: "#570af2",
               border: "transparent",
             }}
             mt={6}

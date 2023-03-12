@@ -55,7 +55,11 @@ export default function Navbar() {
   const onOpen = () => dispatch(onOpenCartDrawerAction());
 
   return (
-    <Box borderBottom={`1px solid #2d3748`} px={4} mb={7}>
+    <Box
+      borderBottom={colorMode === "light" ? "1px solid #ddd" : "1px solid #2d3748"}
+      px={4}
+      mb={7}
+    >
       <Container maxW="7xl">
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
