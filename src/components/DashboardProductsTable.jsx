@@ -43,7 +43,6 @@ import { selectNetwork } from "../app/features/networkSlice";
 
 const DashboardProductsTable = () => {
   const { isOnline } = useSelector(selectNetwork);
-  console.log(isOnline);
   const [clickedProductId, setClickedProductId] = useState(null);
   const [productToEdit, setProductToEdit] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);

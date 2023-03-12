@@ -15,6 +15,10 @@ const ProductCard = ({ id, attributes }) => {
       bg={"none"}
       rounded={"lg"}
       boxShadow={"10px 10px 0px 0px rgba(245,245,245,1)"}
+      transition={".3s ease-in-out"}
+      _hover={{ transform: "translateY(-20px)" }}
+      as={Link}
+      to={`/product/${id}`}
     >
       <CardBody>
         <Image
