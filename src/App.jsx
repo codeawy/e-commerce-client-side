@@ -1,6 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
 import HomePage from "./pages";
-import AboutPage from "./pages/About";
 import ProductsPage from "./pages/Products";
 import ProductPage from "./pages/Product";
 import LoginPage from "./pages/LoginPage";
@@ -19,9 +18,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="products" element={<ProductsPage />} />
           <Route path="products/:id" element={<ProductPage />} />
-          <Route path="about" element={<AboutPage />} />
         </Route>
 
         <Route path="/dashboard" element={<DashboardLayout />}>

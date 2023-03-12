@@ -23,19 +23,17 @@ import { selectCart } from "../app/features/cartSlice";
 import { onOpenCartDrawerAction } from "../app/features/globalSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-const Links = ["Products"];
-
 const NavLink = ({ children }) => (
   <Link
     as={RouterLink}
     to={children.toLowerCase()}
-    px={2}
-    py={1}
     rounded={"md"}
     _hover={{
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
+    fontWeight={"500"}
+    fontSize={"sm"}
   >
     {children}
   </Link>
@@ -58,16 +56,15 @@ export default function Navbar() {
     <Box
       borderBottom={colorMode === "light" ? "1px solid #ddd" : "1px solid #2d3748"}
       px={4}
-      mb={7}
+      mb={16}
     >
       <Container maxW="7xl">
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
-            <RouterLink to="/">My App</RouterLink>
+            <NavLink fontWeight={"500"} fontSize={"sm"}>
+              Home
+            </NavLink>
             <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
-              {Links.map(link => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
               {token ? <NavLink>Dashboard</NavLink> : null}
             </HStack>
           </HStack>
