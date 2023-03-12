@@ -26,11 +26,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { BsTrash } from "react-icons/bs";
-import { AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEye, AiOutlinePlus } from "react-icons/ai";
 import { FiEdit2 } from "react-icons/fi";
 import { IoIosClose } from "react-icons/io";
 import TableSkeleton from "./TableSkeleton";
 import {
+  useCreateDashboardProductsMutation,
   useDeleteDashboardProductsMutation,
   useGetDashboardProductsQuery,
   useUpdateDashboardProductsMutation,
@@ -45,15 +46,27 @@ const DashboardProductsTable = () => {
   const { isOnline } = useSelector(selectNetwork);
   const [clickedProductId, setClickedProductId] = useState(null);
   const [productToEdit, setProductToEdit] = useState(null);
+  const [productToCreate, setProductToCreate] = useState({
+    title: "",
+    description: "",
+  });
   const [thumbnail, setThumbnail] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
-  const { isLoading, data, error } = useGetDashboardProductsQuery({ page: 1 });
+  const {
+    isOpen: isCreateModalOpen,
+    onOpen: onCreateModalOpen,
+    onClose: onCreateModalClose,
+  } = useDisclosure();
+  const { isLoading, data } = useGetDashboardProductsQuery({ page: 1 });
   const [destroyProduct, { isLoading: isDestroying, isSuccess }] =
     useDeleteDashboardProductsMutation();
   const [updateProduct, { isLoading: isUpdating, isSuccess: isUpdatingSuccess }] =
     useUpdateDashboardProductsMutation();
+  const [createProduct, { isLoading: isCreating, isSuccess: isCreatingSuccess }] =
+    useCreateDashboardProductsMutation();
 
+  /** --------- EDITING --------- */
   const onChangeHandler = e => {
     const { name, value } = e.target;
 
@@ -63,23 +76,19 @@ const DashboardProductsTable = () => {
     });
   };
 
-  const onChangePriceHandler = value => {
+  const onChangePriceHandler = value =>
     setProductToEdit({
       ...productToEdit,
       price: +value,
     });
-  };
 
-  const onChangeStockHandler = value => {
+  const onChangeStockHandler = value =>
     setProductToEdit({
       ...productToEdit,
       stock: +value,
     });
-  };
 
-  const onChangeThumbnailHandler = e => {
-    setThumbnail(e.target.files[0]);
-  };
+  const onChangeThumbnailHandler = e => setThumbnail(e.target.files[0]);
 
   const onSubmitHandler = () => {
     const formData = new FormData();
@@ -96,6 +105,43 @@ const DashboardProductsTable = () => {
     updateProduct({ id: clickedProductId, body: formData });
   };
 
+  /** --------- CREATING --------- */
+  const onChangeCreateHandler = e => {
+    const { name, value } = e.target;
+
+    setProductToCreate({
+      ...productToCreate,
+      [name]: value,
+    });
+  };
+
+  const onChangePriceCreateHandler = value =>
+    setProductToCreate({
+      ...productToCreate,
+      price: +value,
+    });
+
+  const onChangeStockCreateHandler = value =>
+    setProductToCreate({
+      ...productToCreate,
+      stock: +value,
+    });
+
+  const onSubmitCreateHandler = () => {
+    const formData = new FormData();
+    formData.append(
+      "data",
+      JSON.stringify({
+        title: productToCreate.title,
+        description: productToCreate.description,
+        price: productToCreate.price,
+        stock: productToCreate.stock,
+      })
+    );
+    formData.append("files.thumbnail", thumbnail);
+    createProduct(formData);
+  };
+
   useEffect(() => {
     if (isSuccess) {
       setClickedProductId(null);
@@ -105,14 +151,25 @@ const DashboardProductsTable = () => {
       setClickedProductId(null);
       onModalClose();
     }
-  }, [isSuccess, isUpdatingSuccess]);
+    if (isCreatingSuccess) {
+      onCreateModalClose();
+    }
+  }, [isSuccess, isUpdatingSuccess, isCreatingSuccess]);
 
   if (isLoading || !isOnline) return <TableSkeleton />;
 
   return (
     <>
       <Flex direction={"column"} maxW="85%" mx={"auto"} my={6}>
-        <Button colorScheme="green" onClick={() => {}} ml={"auto"} w={"fit-content"}>
+        <Button
+          rightIcon={<AiOutlinePlus />}
+          colorScheme="green"
+          onClick={() => {
+            onCreateModalOpen();
+          }}
+          ml={"auto"}
+          w={"fit-content"}
+        >
           Create
         </Button>
         <TableContainer border={"1px solid #2d3748"} rounded={"lg"} p={3} my={6}>
@@ -134,7 +191,7 @@ const DashboardProductsTable = () => {
                 <Tr key={product.id}>
                   <Td>{product?.id}</Td>
                   <Td>{product?.attributes?.title}</Td>
-                  <Td>{product?.attributes?.category?.data?.attributes?.title}</Td>
+                  <Td>{product?.attributes?.category?.data?.attributes?.title ?? "N/A"}</Td>
                   <Td>
                     <Image
                       borderRadius="full"
@@ -265,6 +322,82 @@ const DashboardProductsTable = () => {
             name="price"
             defaultValue={productToEdit?.stock}
             onChange={onChangeStockHandler}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel>Thumbnail</FormLabel>
+          <Input
+            id="thumbnail"
+            type="file"
+            h={"full"}
+            p={2}
+            accept="image/png, image/gif, image/jpeg"
+            onChange={onChangeThumbnailHandler}
+          />
+        </FormControl>
+      </CustomModal>
+
+      <CustomModal
+        isOpen={isCreateModalOpen}
+        onClose={onCreateModalClose}
+        title={"Update Product"}
+        okTxt="Upload"
+        onOkClick={onSubmitCreateHandler}
+        isLoading={isCreating}
+      >
+        <FormControl>
+          <FormLabel>Title</FormLabel>
+          <Input
+            my={3}
+            placeholder="Product Title"
+            name="title"
+            value={productToCreate?.title}
+            onChange={onChangeCreateHandler}
+          />
+        </FormControl>
+
+        <FormControl mb={3}>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            placeholder="Product Description"
+            name="description"
+            value={productToCreate?.description}
+            onChange={onChangeCreateHandler}
+          />
+        </FormControl>
+
+        <FormControl mb={3}>
+          <FormLabel>Price</FormLabel>
+          <NumberInput
+            name="price"
+            defaultValue={productToCreate?.price}
+            onChange={onChangePriceCreateHandler}
+            precision={2}
+            step={0.2}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+
+        <FormControl my={3}>
+          <FormLabel>Count in Stock</FormLabel>
+          <NumberInput
+            precision={2}
+            step={0.2}
+            name="price"
+            defaultValue={productToCreate?.stock}
+            onChange={onChangeStockCreateHandler}
           >
             <NumberInputField />
             <NumberInputStepper>

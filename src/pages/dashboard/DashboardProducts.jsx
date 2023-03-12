@@ -2,9 +2,9 @@ import DashboardProductsTable from "../../components/DashboardProductsTable";
 
 const DashboardProducts = () => {
   return (
-    <div>
+    <>
       <DashboardProductsTable />
-    </div>
+    </>
   );
 };
 

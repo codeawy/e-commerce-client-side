@@ -13,7 +13,7 @@ export const productsApiSlice = createApi({
       query: arg => {
         const { page } = arg;
         return {
-          url: `/api/products?populate=category,thumbnail&pagination[page]=${page}&pagination[pageSize]=7`,
+          url: `/api/products?populate=category,thumbnail&pagination[page]=${page}`,
         };
       },
       providesTags: result =>
@@ -51,6 +51,21 @@ export const productsApiSlice = createApi({
       invalidatesTags: [{ type: "Products", id: "LIST" }],
     }),
 
+    // ** CREATE
+    createDashboardProducts: build.mutation({
+      query(body) {
+        return {
+          url: `/api/products`,
+          method: "POST",
+          body,
+          headers: {
+            Authorization: `Bearer ${CookieService.get("jwt")}`,
+          },
+        };
+      },
+      invalidatesTags: [{ type: "Products", id: "LIST" }],
+    }),
+
     // ** DELETE
     deleteDashboardProducts: build.mutation({
       query(id) {
@@ -69,6 +84,7 @@ export const productsApiSlice = createApi({
 
 export const {
   useGetDashboardProductsQuery,
+  useCreateDashboardProductsMutation,
   useDeleteDashboardProductsMutation,
   useUpdateDashboardProductsMutation,
 } = productsApiSlice;
