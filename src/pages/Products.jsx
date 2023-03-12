@@ -30,7 +30,7 @@ const ProductsPage = () => {
     }
   );
 
-  if (isLoading)
+  if (true)
     return (
       <Grid templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"} gap={6}>
         {Array.from({ length: 20 }, (_, idx) => (
