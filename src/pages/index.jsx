@@ -46,7 +46,7 @@ const HomePage = () => {
           size="xs"
           isIndeterminate
           colorScheme={"purple"}
-          position={"absolute"}
+          position={"fixed"}
           top={"0"}
           left={"0"}
           w={"full"}
