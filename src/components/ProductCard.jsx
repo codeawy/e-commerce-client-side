@@ -39,13 +39,13 @@ const ProductCard = ({ id, attributes }) => {
           <Button
             as={Link}
             to={`/products/${id}`}
-            color={"#e6f3fd"}
             size={"xl"}
             variant="outline"
             border={"none"}
             py={5}
             overflow={"hidden"}
             w={"full"}
+            color={"#e6f3fd"}
             bg={"#6b28ef"}
             _hover={{
               bg: "#570af2",

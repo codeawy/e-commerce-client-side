@@ -14,17 +14,23 @@ import {
   InputRightElement,
   InputGroup,
   FormHelperText,
+  useColorMode,
+  Text,
 } from "@chakra-ui/react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { selectLogin, userLogin } from "../app/features/loginSlice";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { BsArrowLeft } from "react-icons/bs";
 
 export default function LoginPage({ isAuthenticated }) {
   if (isAuthenticated) return <Navigate to={-1} replace />;
 
   const dispatch = useDispatch();
-  const { loading, data, error } = useSelector(selectLogin);
+  const navigate = useNavigate();
+  const { colorMode } = useColorMode();
+  const { loading } = useSelector(selectLogin);
+
   const [user, setUser] = useState({
     identifier: "",
     password: "",
@@ -37,6 +43,8 @@ export default function LoginPage({ isAuthenticated }) {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
+
+  const goBack = () => navigate(-1);
 
   const submitHandler = e => {
     e.preventDefault();
@@ -61,21 +69,32 @@ export default function LoginPage({ isAuthenticated }) {
   };
 
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+    <Flex minH={"100vh"} align={"center"} justify={"center"}>
+      <Stack mx={"auto"} maxW={"lg"}>
+        <Flex
+          alignItems={"center"}
+          maxW="sm"
+          mr={"auto"}
+          my={3}
+          fontSize={"lg"}
+          cursor={"pointer"}
+          onClick={goBack}
+        >
+          <BsArrowLeft />
+          <Text ml={2}>Back</Text>
+        </Flex>
+
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
+          <Heading fontSize={"4xl"} mb={3}>
+            Sign in to your account
+          </Heading>
         </Stack>
+
         <Box
           as={"form"}
           rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
+          border={colorMode === "light" ? "1px solid #ddd" : "1px solid #2d3748"}
+          boxShadow={"10px 10px 0px 0px rgba(245,245,245,1)"}
           p={8}
           onSubmit={submitHandler}
         >
@@ -130,15 +149,17 @@ export default function LoginPage({ isAuthenticated }) {
                 justify={"space-between"}
               >
                 <Checkbox>Remember me</Checkbox>
-                <Link color={"blue.400"}>Forgot password?</Link>
+                <Link color={"#7f42f8"}>Forgot password?</Link>
               </Stack>
               <Button
-                bg={isEmail || isPassword ? "red.500" : "blue.400"}
-                color={"white"}
+                color={"#e6f3fd"}
+                bg={isEmail || isPassword ? "red.500" : "#6b28ef"}
                 _hover={{
-                  bg: isEmail || isPassword ? "red.600" : "blue.600",
+                  bg: "#570af2",
+                  border: "transparent",
                 }}
                 type="submit"
+                h={16}
                 isLoading={loading}
               >
                 Sign in
