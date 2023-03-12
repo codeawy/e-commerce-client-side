@@ -1,18 +1,34 @@
-import { Grid } from "@chakra-ui/layout";
+import { Grid, Stack } from "@chakra-ui/layout";
 import ProductCard from "../components/ProductCard";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
+import { AiOutlinePlus } from "react-icons/ai";
 import ProductSkeleton from "../components/ProductCardSkeleton";
+import { Button } from "@chakra-ui/react";
 
 const ProductsPage = () => {
-  const getProductList = async () => {
+  const getProductList = async ({ pageParam = 1 }) => {
     const { data } = await axios.get(
-      `${import.meta.env.VITE_SERVER_URL}/api/products?populate=thumbnail,category`
+      `${
+        import.meta.env.VITE_SERVER_URL
+      }/api/products?populate=thumbnail,category&pagination[pageSize]=3&pagination[page]=${pageParam}`
     );
     return data;
   };
 
-  const { isLoading, data } = useQuery("products", getProductList);
+  // const { isLoading, data } = useQuery("products", getProductList);
+  const { data, isLoading, isFetching, fetchNextPage, isError, hasNextPage } = useInfiniteQuery(
+    ["products"],
+    getProductList,
+    {
+      getNextPageParam: (lastPage, _) => {
+        if (lastPage.meta.pagination.page < lastPage.meta.pagination.pageCount)
+          return lastPage.meta.pagination.page + 1;
+
+        return false;
+      },
+    }
+  );
 
   if (isLoading)
     return (
@@ -24,11 +40,36 @@ const ProductsPage = () => {
     );
 
   return (
-    <Grid templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"} gap={6}>
-      {data.data.map(product => (
-        <ProductCard key={product.id} {...product} />
-      ))}
-    </Grid>
+    <>
+      <Grid templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"} gap={6}>
+        {data.pages.map(product =>
+          product.data.map(product => <ProductCard key={product.id} {...product} />)
+        )}
+      </Grid>
+
+      {isLoading ? (
+        <Stack mx={"auto"} w="fit-content" my={20}>
+          <Button colorScheme="purple" variant="solid" width={141} height={"40px"} />
+        </Stack>
+      ) : null}
+
+      {hasNextPage && !isLoading ? (
+        <Stack mx={"auto"} w="fit-content" my={20}>
+          <Button
+            rightIcon={<AiOutlinePlus />}
+            variant="solid"
+            onClick={fetchNextPage}
+            bg="#6b28ef"
+            _hover={{
+              bg: "#570af2",
+              border: "transparent",
+            }}
+          >
+            Load More
+          </Button>
+        </Stack>
+      ) : null}
+    </>
   );
 };
 

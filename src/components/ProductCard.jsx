@@ -6,7 +6,6 @@ import { Heading, Stack, Text } from "@chakra-ui/layout";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ id, attributes }) => {
-  console.log(attributes?.thumbnail);
   const { colorMode } = useColorMode();
 
   return (
@@ -17,8 +16,6 @@ const ProductCard = ({ id, attributes }) => {
       boxShadow={"10px 10px 0px 0px rgba(245,245,245,1)"}
       transition={".3s ease-in-out"}
       _hover={{ transform: "translateY(-20px)" }}
-      as={Link}
-      to={`/product/${id}`}
     >
       <CardBody>
         <Image
