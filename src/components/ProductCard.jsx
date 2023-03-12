@@ -39,7 +39,6 @@ const ProductCard = ({ id, attributes }) => {
           <Button
             as={Link}
             to={`/products/${id}`}
-            bg={"#6b28ef"}
             color={"#e6f3fd"}
             size={"xl"}
             variant="outline"
@@ -47,6 +46,7 @@ const ProductCard = ({ id, attributes }) => {
             py={5}
             overflow={"hidden"}
             w={"full"}
+            bg={"#6b28ef"}
             _hover={{
               bg: "#570af2",
               border: "transparent",

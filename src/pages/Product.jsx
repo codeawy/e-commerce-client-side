@@ -16,11 +16,11 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import axios from "axios";
-import ProductDetailsSkeleton from "../components/ProductDetailsSkeleton";
 import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import imgFalBack from "../assets/img-placeholder.png";
 import { addToCart } from "../app/features/cartSlice";
+import ProductSkeleton from "../components/ProductCardSkeleton";
 
 const ProductPage = () => {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const ProductPage = () => {
   if (isLoading)
     return (
       <Box maxW="sm" mx={"auto"} my={20}>
-        <ProductDetailsSkeleton />
+        <ProductSkeleton />
       </Box>
     );
 
@@ -63,12 +63,17 @@ const ProductPage = () => {
         <BsArrowLeft />
         <Text ml={2}>Back</Text>
       </Flex>
-      <Card maxW="sm" mx={"auto"} mb={20} border={"1px solid #a8b5c8"} bg={"none"}>
+      <Card
+        maxW="sm"
+        mx={"auto"}
+        mb={20}
+        border={colorMode === "light" ? "1px solid #ddd" : "1px solid #2d3748"}
+        boxShadow={"10px 10px 0px 0px rgba(245,245,245,1)"}
+        bg={"none"}
+      >
         <CardBody>
           <Image
-            src={`${import.meta.env.VITE_SERVER_URL}${
-              data?.data?.attributes?.thumbnail?.data?.attributes?.url
-            }`}
+            src={data?.data?.attributes?.thumbnail?.data?.attributes?.url}
             alt={data?.data?.attributes?.title}
             borderRadius="lg"
             h={"200px"}
@@ -96,13 +101,12 @@ const ProductPage = () => {
             onClick={addToCartHandler}
             w={"full"}
             size={"lg"}
-            bg={colorMode === "light" ? "#e6f3fd" : "#9f7aea"}
-            color={colorMode !== "light" ? "#e6f3fd" : "#9f7aea"}
+            bg={"#6b28ef"}
             _hover={{
-              bg: colorMode !== "light" ? "#e6f3fd" : "#9f7aea",
-              color: colorMode === "light" ? "white" : "#9f7aea",
+              bg: "#570af2",
               border: "transparent",
             }}
+            color={"white"}
             p={8}
             textTransform={"uppercase"}
           >
